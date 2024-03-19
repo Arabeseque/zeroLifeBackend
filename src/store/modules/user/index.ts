@@ -13,7 +13,7 @@ import useAppStore from '../app';
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
     name: undefined,
-    avatar: undefined,
+    avatar: 'https://plus.unsplash.com/premium_photo-1710118735364-c04ad6961401?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw2N3x8fGVufDB8fHx8fA%3D%3D',
     job: undefined,
     organization: undefined,
     location: undefined,

@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-title">登录 零卡生活</div>
+    <div class="login-form-sub-title">健康生活指南</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -85,6 +85,7 @@
     username: 'admin', // 演示默认值
     password: 'admin', // demo default value
   });
+  
   const userInfo = reactive({
     username: loginConfig.value.username,
     password: loginConfig.value.password,

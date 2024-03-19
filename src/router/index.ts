@@ -31,7 +31,7 @@ const router = createRouter({
     return { top: 0 };
   },
 });
-
+  
 createRouteGuard(router);
 
 export default router;

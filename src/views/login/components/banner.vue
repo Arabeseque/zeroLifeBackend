@@ -4,9 +4,9 @@
       <a-carousel class="carousel" animation-name="fade">
         <a-carousel-item v-for="item in carouselItem" :key="item.slogan">
           <div :key="item.slogan" class="carousel-item">
-            <div class="carousel-title">{{ item.slogan }}</div>
+            <div class="carousel-title " >{{ item.slogan }}</div>
             <div class="carousel-sub-title">{{ item.subSlogan }}</div>
-            <img class="carousel-image" :src="item.image" />
+            <!-- <img class="carousel-image" :src="item.image" /> -->
           </div>
         </a-carousel-item>
       </a-carousel>
@@ -22,18 +22,18 @@
   const { t } = useI18n();
   const carouselItem = computed(() => [
     {
-      slogan: t('login.banner.slogan1'),
-      subSlogan: t('login.banner.subSlogan1'),
+      slogan: '零卡生活，轻享健康',
+      subSlogan: '百万用户的选择，开启你的健康新生活',
       image: bannerImage,
     },
     {
-      slogan: t('login.banner.slogan2'),
-      subSlogan: t('login.banner.subSlogan2'),
+      slogan: '轻松管理体重，享受美味生活',
+      subSlogan: '零卡生活，为你打开健康之门',
       image: bannerImage,
     },
     {
-      slogan: t('login.banner.slogan3'),
-      subSlogan: t('login.banner.subSlogan3'),
+      slogan: '爱自己，就选择零卡生活',
+      subSlogan: '小改变，大健康，零卡生活伴你同行',
       image: bannerImage,
     },
   ]);

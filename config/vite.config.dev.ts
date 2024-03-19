@@ -1,5 +1,6 @@
 import { mergeConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
+import UnoCSS from 'unocss/vite';
 import baseConfig from './vite.config.base';
 
 export default mergeConfig(
@@ -11,7 +12,9 @@ export default mergeConfig(
         strict: true,
       },
     },
+
     plugins: [
+      UnoCSS(),
       eslint({
         cache: false,
         include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
