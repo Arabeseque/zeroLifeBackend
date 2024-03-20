@@ -1,15 +1,15 @@
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.list', '营养表格']" />
-    <a-card class="general-card" title='营养表格'>
+    <Breadcrumb :items="['menu.list', viewName]" />
+    <a-card class="general-card" :title='viewName'>
       <a-row>
         <a-col :flex="1">
           <a-form :model="formModel" :label-col-props="{ span: 6 }" :wrapper-col-props="{ span: 18 }"
             label-align="left">
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-form-item field="number" label="食品名称">
-                  <a-input v-model="formModel.number" placeholder="请输入食品名称" />
+                <a-form-item field="number" :label="searchName">
+                  <a-input v-model="formModel.number" :placeholder="placeholderText" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -97,6 +97,10 @@
         <template #index="{ rowIndex }">
           {{ rowIndex + 1 + (pagination.current - 1) * pagination.pageSize }}
         </template>
+        <template #pic="{ rowIndex }">
+          <a-image width="20"
+            src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp" />
+        </template>
         <template #operations="{ record }">
           <a-button type="text" size="small" @click="handleClick(record)">
             查看
@@ -104,79 +108,30 @@
           <a-button type="text" size="small" @click="handleDelClick(record)">
             删除
           </a-button>
-
         </template>
       </a-table>
     </a-card>
 
     <!-- PUT -->
-    <a-modal v-model:visible="visible" @cancel="handleCancel" :on-before-ok="handleBeforeOk" :ok="handleSubmit"
-      unmountOnClose>
+    <a-modal v-model:visible="visible" @cancel="handleCancel" :on-before-ok="handleBeforeOk" unmountOnClose>
       <template #title>
         属性
       </template>
-      <a-form :model="form"  @submit="handleSubmit">
-        <a-form-item field="danbai" label="蛋白质">
-          <a-input v-model="form.danbai" placeholder="请输入蛋白质..." />
-        </a-form-item>
-        <a-form-item field="danguchun" label="碳水化合物">
-          <a-input v-model="form.danguchun" placeholder="请输入碳水化合物..." />
-        </a-form-item>
-        <a-form-item field="gai" label="钙">
-          <a-input v-model="form.gai" placeholder="请输入钙..." />
-        </a-form-item>
-        <a-form-item field="huluobosu" label="胡萝卜素">
-          <a-input v-model="form.huluobosu" placeholder="请输入胡萝卜素..." />
-        </a-form-item>
-        <a-form-item field="jia" label="钾">
-          <a-input v-model="form.jia" placeholder="请输入加..." />
-        </a-form-item>
-        <a-form-item field="lin" label="磷">
-          <a-input v-model="form.lin" placeholder="请输入磷..." />
-        </a-form-item>
-        <a-form-item field="mei" label="镁">
-          <a-input v-model="form.mei" placeholder="请输入镁..." />
-        </a-form-item>
-        <a-form-item field="meng" label="锰">
-          <a-input v-model="form.meng" placeholder="请输入锰..." />
+      <a-form :model="form" @submit="handleSubmit">
+        <a-form-item v-for="(item, index) in formProps" :key="index" :field="item.field" :label="item.label">
+          <a-input v-model="form[item.field]" :placeholder="item.placeholder" />
         </a-form-item>
       </a-form>
     </a-modal>
 
     <!-- ADD -->
-    <a-modal v-model:visible="addVisible"  :on-before-ok="handleAddBeforeOk" 
-      unmountOnClose>
+    <a-modal v-model:visible="addVisible" :on-before-ok="handleAddBeforeOk" unmountOnClose>
       <template #title>
         新建
       </template>
       <a-form :model="addForm">
-        <!-- name -->
-        <a-form-item field="name" label="名称">
-          <a-input v-model="addForm.name" placeholder="请输入名称..." />
-        </a-form-item>
-        <a-form-item field="danbai" label="蛋白质">
-          <a-input v-model="addForm.danbai" placeholder="请输入蛋白质..." />
-        </a-form-item>
-        <a-form-item field="danguchun" label="碳水化合物">
-          <a-input v-model="addForm.danguchun" placeholder="请输入碳水化合物..." />
-        </a-form-item>
-        <a-form-item field="gai" label="钙">
-          <a-input v-model="addForm.gai" placeholder="请输入钙..." />
-        </a-form-item>
-        <a-form-item field="huluobosu" label="胡萝卜素">
-          <a-input v-model="addForm.huluobosu" placeholder="请输入胡萝卜素..." />
-        </a-form-item>
-        <a-form-item field="jia" label="钾">
-          <a-input v-model="addForm.jia" placeholder="请输入加..." />
-        </a-form-item>
-        <a-form-item field="lin" label="磷">
-          <a-input v-model="addForm.lin" placeholder="请输入磷..." />
-        </a-form-item>
-        <a-form-item field="mei" label="镁">
-          <a-input v-model="addForm.mei" placeholder="请输入镁..." />
-        </a-form-item>
-        <a-form-item field="meng" label="锰">
-          <a-input v-model="form.meng" placeholder="请输入锰..." />
+        <a-form-item v-for="(item, index) in addFormProps" :key="index" :field="item.field" :label="item.label">
+          <a-input v-model="addForm[item.field]" :placeholder="item.placeholder" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -192,22 +147,106 @@ import { Pagination } from '@/types/global';
 import type { SelectOptionData } from '@arco-design/web-vue/es/select/interface';
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface';
 import cloneDeep from 'lodash/cloneDeep';
-import Sortable from 'sortablejs';
+import Sortable from 'sortablejs'; '营养计划'
 
-import { NutritionControllerApi } from '@/service/index';
+// TODO: API
+import { NutritionRecordControllerApi } from '@/service/index';
 
-const api = new NutritionControllerApi();
+// TODO: 基本定义
+const viewName = '食品记录';
+const searchName = '食品名称';
+const placeholderText = computed(() => `请输入${searchName}`);
+const form = ref()
+const addForm = ref()
 
+// TODO: computed 定义
+const formProps = computed(() => {
+  console.log(renderData.value)
+  const fields = []
+  for (const key in renderData.value[0]) {
+    if (key === 'id' || key === 'userId') continue
+    fields.push({
+      field: key,
+      label: key,
+      placeholder: `请输入${key}`
+    })
+  }
+  return fields
+})
+const addFormProps = computed(() => {
+  console.log(renderData.value)
+  const fields = []
+  for (const key in renderData.value[0]) {
+    if (key === 'id' || key === 'userId') continue
+    fields.push({
+      field: key,
+      label: key,
+      placeholder: `请输入${key}`
+    })
+  }
+  return fields
+})
+// columns 样式
+const columns = computed(() => {
+  let arr: any = []
+  // renderData
+  if (renderData.value.length > 0) {
+    arr = Object.keys(renderData.value[0]).map((item) => {
+      return {
+        title: item,
+        dataIndex: item,
+      }
+    })
+  }
+  return arr
+})
+
+// TODO: API fuction
+const api = new NutritionRecordControllerApi();
 // DEL
 const handleDelClick = async (item: any) => {
   console.log(item, 'record')
-  await api.nutritionDelete([item.id]);
-  
+  await api.nutritionRecordDelete([item.id]);
   fetchData();
 }
+const handleAddBeforeOk = async () => {
+  console.log(addForm.value, 'addForm')
+  await api.nutritionRecordPost(addForm.value);
+  await fetchData();
+  return true;
+};
+const handleBeforeOk = async () => {
+  await api.nutritionRecordPost(form.value);
+  await fetchData();
+  return true;
+  // prevent close
+  // return false;
+};
+const fetchData = async (
+  params: PolicyParams = { current: 1, pageSize: 20 }
+) => {
+  setLoading(true);
+  try {
+    const { data } = await api.nutritionRecordGet(1, 10)
+
+    console.log(data, 'getData')
+    // const { data } = await queryPolicyList(params);
+
+    // 设置 Table 图案的数据源
+    renderData.value = data.data;
+    pagination.current = params.current;
+    if (data.count)
+      pagination.total = data.count;
+  } catch (err) {
+    console.log(err, 'err')
+    // you can report use errorHandler or other
+  } finally {
+    setLoading(false);
+  }
+};
 
 
-// Add
+// TODO: basic fuction
 const addVisible = ref(false);
 
 const handleAddClick = (item: any) => {
@@ -216,39 +255,6 @@ const handleAddClick = (item: any) => {
   addVisible.value = true;
 }
 
-const addForm = ref({
-  name: '',
-  danbai: 0,
-  danguchun: 0,
-  gai: 0,
-  huluobosu: 0,
-  jia: 0,
-  lin: 0,
-  mei: 0,
-  meng: 0,
-  na: 0,
-  pic: null,
-  reliang: 0,
-  tanshui: 0,
-  tie: 0,
-  tong: 0,
-  va: 0,
-  vc: 0,
-  ve: 0,
-  xi: 0,
-  xianwei: 0,
-  xin: 0,
-  yansuan: 0,
-  zhifang: 0,
-})
-
-const handleAddBeforeOk = async () => {
-  await api.nutritionPost(addForm.value);
-  await fetchData();
-  return true;
-  // prevent close
-  // return false;
-};
 
 // PUT
 const visible = ref(false);
@@ -257,45 +263,13 @@ const handleClick = (item: any) => {
   console.log(item, 'record')
   form.value = item;
   visible.value = true;
+};
 
-};
-const handleBeforeOk = async () => {
-  await api.nutritionPut(form.value);
-  await fetchData();
-  return true;
-  // prevent close
-  // return false;
-};
 const handleCancel = () => {
   visible.value = false;
 }
 
-const form = ref({
-  id: 1,
-  name: '小麦',
-  danbai: 12,
-  danguchun: 0,
-  gai: 34,
-  huluobosu: 2,
-  jia: 289,
-  lin: 325,
-  mei: 4,
-  meng: 3,
-  na: 7,
-  pic: null,
-  reliang: 317,
-  tanshui: 64,
-  tie: 5,
-  tong: 0,
-  va: 0,
-  vc: 0,
-  ve: 2,
-  xi: 4,
-  xianwei: 11,
-  xin: 2,
-  yansuan: 4,
-  zhifang: 1,
-})
+
 
 function handleSubmit() {
   console.log('submit');
@@ -349,107 +323,6 @@ const densityList = computed(() => [
     value: 'large',
   },
 ]);
-const columns = computed<TableColumnData[]>(() => [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    slotName: 'id',
-  },
-  {
-    title: '名称',
-    dataIndex: 'name',
-  },
-  {
-    title: '蛋白质',
-    dataIndex: 'danbai',
-  },
-  {
-    title: '碳水化合物',
-    dataIndex: 'danguchun',
-  },
-  {
-    title: '钙',
-    dataIndex: 'gai',
-  },
-  {
-    title: '胡萝卜素',
-    dataIndex: 'huluobosu',
-  },
-  {
-    title: '加',
-    dataIndex: 'jia',
-  },
-  {
-    title: '磷',
-    dataIndex: 'lin',
-  },
-  {
-    title: '镁',
-    dataIndex: 'mei',
-  },
-  {
-    title: '锰',
-    dataIndex: 'meng',
-  },
-  {
-    title: '钠',
-    dataIndex: 'na',
-  },
-  {
-    title: '蛋白质',
-    dataIndex: 'reliang',
-  },
-  {
-    title: '碳水',
-    dataIndex: 'tanshui',
-  },
-  {
-    title: '铁',
-    dataIndex: 'tie',
-  },
-  {
-    title: '铜',
-    dataIndex: 'tong',
-  },
-  {
-    title: 'VA',
-    dataIndex: 'va',
-  },
-  {
-    title: 'VC',
-    dataIndex: 'vc',
-  },
-  {
-    title: 'VE',
-    dataIndex: 've',
-  },
-  {
-    title: '锡',
-    dataIndex: 'xi',
-  },
-  {
-    title: '硝酸盐',
-    dataIndex: 'xianwei',
-  },
-  {
-    title: '锌',
-    dataIndex: 'xin',
-  },
-  {
-    title: '盐酸',
-    dataIndex: 'yansuan',
-  },
-  {
-    title: '脂肪',
-    dataIndex: 'zhifang',
-  },
-  // opretion
-  {
-    title: "操作",
-    dataIndex: 'operations',
-    slotName: 'operations',
-  },
-]);
 
 const contentTypeOptions = computed<SelectOptionData[]>(() => [
   {
@@ -486,30 +359,6 @@ const statusOptions = computed<SelectOptionData[]>(() => [
   },
 ]);
 
-const fetchData = async (
-  params: PolicyParams = { current: 1, pageSize: 20 }
-) => {
-  setLoading(true);
-  try {
-    // TODO: getData
-    const api = new NutritionControllerApi();
-    const { data } = await api.nutritionGet(1, 10)
-
-    console.log(data, 'getData')
-    // const { data } = await queryPolicyList(params);
-
-    // 设置 Table 图案的数据源
-    renderData.value = data.data;
-    pagination.current = params.current;
-    if (data.count)
-      pagination.total = data.count;
-  } catch (err) {
-    console.log(err, 'err')
-    // you can report use errorHandler or other
-  } finally {
-    setLoading(false);
-  }
-};
 
 const search = () => {
   fetchData({
@@ -580,6 +429,8 @@ const popupVisibleChange = (val: boolean) => {
   }
 };
 
+
+// TODO: watch
 watch(
   () => columns.value,
   (val) => {
@@ -591,6 +442,18 @@ watch(
   },
   { deep: true, immediate: true }
 );
+
+watch(renderData, () => {
+  if (renderData.value.length > 0) {
+    const { id, userId, ...rest } = renderData.value[0]
+    const newAddForm = {}
+    for (const key in rest) {
+      newAddForm[key] = String(rest[key])
+    }
+    addForm.value = newAddForm
+  }
+})
+
 </script>
 
 <script lang="ts">
