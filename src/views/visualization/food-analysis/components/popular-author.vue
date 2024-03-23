@@ -2,11 +2,9 @@
   <a-spin :loading="loading" style="width: 100%">
     <a-card class="general-card" :header-style="{ paddingBottom: '14px' }">
       <template #title>
-        {{ $t('dataAnalysis.popularAuthor') }}
+        年度最热食品榜单
       </template>
-      <template #extra>
-        <a-link>{{ $t('workplace.viewMore') }}</a-link>
-      </template>
+
       <a-table
         :data="tableData.list"
         :pagination="false"
@@ -16,26 +14,22 @@
       >
         <template #columns>
           <a-table-column
-            :title="$t('dataAnalysis.popularAuthor.column.ranking')"
-            data-index="ranking"
+            title="名称"
+            data-index="name"
           >
           </a-table-column>
+
           <a-table-column
-            :title="$t('dataAnalysis.popularAuthor.column.author')"
-            data-index="author"
-          >
-          </a-table-column>
-          <a-table-column
-            :title="$t('dataAnalysis.popularAuthor.column.content')"
-            data-index="contentCount"
+            title="数量"
+            data-index="num"
             :sortable="{
               sortDirections: ['ascend', 'descend'],
             }"
           >
           </a-table-column>
           <a-table-column
-            :title="$t('dataAnalysis.popularAuthor.column.click')"
-            data-index="clickCount"
+            title="年份"
+            data-index="year"
             :sortable="{
               sortDirections: ['ascend', 'descend'],
             }"
@@ -52,13 +46,20 @@
   import useLoading from '@/hooks/loading';
   import { queryPopularAuthor, PopularAuthorRes } from '@/api/visualization';
 
+  import { AnalyseControllerApi as importApi } from '@/service/index';
+
+  const api = new importApi();
+
   const { loading, setLoading } = useLoading();
   const tableData = ref<PopularAuthorRes>({ list: [] });
   const fetchData = async () => {
     try {
       setLoading(true);
-      const { data } = await queryPopularAuthor();
-      tableData.value = data;
+      // const { data } = await queryPopularAuthor();
+      const {data} = await api.analyseHotFoodsByYearGet()
+      tableData.value.list = data.data;
+      console.log(tableData.value, 'tableData')
+
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
