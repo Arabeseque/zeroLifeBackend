@@ -2,10 +2,7 @@
   <a-spin :loading="loading" style="width: 100%">
     <a-card class="general-card" :header-style="{ paddingBottom: '14px' }">
       <template #title>
-        {{ $t('dataAnalysis.contentPublishRatio') }}
-      </template>
-      <template #extra>
-        <a-link>{{ $t('workplace.viewMore') }}</a-link>
+        月度健康用户的热门食物
       </template>
       <Chart style="width: 100%; height: 347px" :option="chartOption" />
     </a-card>
@@ -110,48 +107,66 @@
       },
       series: [
         {
-          name: '纯文本',
+          name: '食品名称',
           data: textChartsData.value,
           stack: 'one',
           type: 'bar',
           barWidth: 16,
           color: isDark ? '#4A7FF7' : '#246EFF',
         },
-        {
-          name: '图文类',
-          data: imgChartsData.value,
-          stack: 'one',
-          type: 'bar',
-          color: isDark ? '#085FEF' : '#00B2FF',
-        },
-        {
-          name: '视频类',
-          data: videoChartsData.value,
-          stack: 'one',
-          type: 'bar',
-          color: isDark ? '#01349F' : '#81E2FF',
-          itemStyle: {
-            borderRadius: 2,
-          },
-        },
+        // {
+        //   name: '图文类',
+        //   data: imgChartsData.value,
+        //   stack: 'one',
+        //   type: 'bar',
+        //   color: isDark ? '#085FEF' : '#00B2FF',
+        // },
+        // {
+        //   name: '视频类',
+        //   data: videoChartsData.value,
+        //   stack: 'one',
+        //   type: 'bar',
+        //   color: isDark ? '#01349F' : '#81E2FF',
+        //   itemStyle: {
+        //     borderRadius: 2,
+        //   },
+        // },
       ],
     };
   });
+
+  
+  import { AnalyseControllerApi as importApi } from '@/service/index';
+
+  const api = new importApi();
+  
   const fetchData = async () => {
     setLoading(true);
     try {
-      const { data: chartData } = await queryContentPublish();
-      xAxis.value = chartData[0].x;
-      chartData.forEach((el: ContentPublishRecord) => {
-        if (el.name === '纯文本') {
-          textChartsData.value = el.y;
-        } else if (el.name === '图文类') {
-          imgChartsData.value = el.y;
-        }
-        videoChartsData.value = el.y;
+      // const { data } = await queryContentPublish();
+
+      const { data } = await api.analyseMonthlyHealthFoodsGet();
+      const chartData = data.data
+      console.log(chartData)
+      // xAxis value from rank1 - rank13
+      const count = chartData.length;
+      // chartData.name
+      xAxis.value = chartData.map((el: ContentPublishRecord, index: number) => {
+        // 保留两个字
+        return el.name.slice(0, 2) ;
+      });
+      chartData.forEach((el: ContentPublishRecord, index: number) => {
+        // if (el.name === '纯文本') {
+        //   textChartsData.value = el.y;
+        // } else if (el.name === '图文类') {
+        //   imgChartsData.value = el.y;
+        // }
+        // videoChartsData.value = el.y;
+        textChartsData.value.push(el.num);
       });
     } catch (err) {
       // you can report use errorHandler or other
+      console.error(err, 'err')
     } finally {
       setLoading(false);
     }

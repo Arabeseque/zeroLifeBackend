@@ -215,7 +215,6 @@ function commonFuction(params: PublicOpinionAnalysis) {
 const fetchData = async (params: PublicOpinionAnalysis) => {
   try {
     const { data } = await commonFuction(params);
-    console.log(data)
     renderData.value = data.data;
     let chartData = renderData.value.chartData;
 
@@ -261,7 +260,6 @@ const fetchData = async (params: PublicOpinionAnalysis) => {
       chartOption.value = pieChartOption.value;
     }
   } catch (err) {
-    console.error(err, 'err')
   } finally {
     setLoading(false);
   }
