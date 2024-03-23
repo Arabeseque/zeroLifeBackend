@@ -31,9 +31,9 @@
       </a-grid-item>
       <a-grid-item :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6, xxl: 6 }">
         <ChainItem
-          :title="$t('dataAnalysis.card.title.totalComment')"
-          quota="comment"
-          chart-type="line"
+          title="肥胖占比"
+          quota="unhealth"
+          chart-type="pie"
           :card-style="{
             background: isDark
               ? 'linear-gradient(180deg, #294B94 0%, #0F275C 100%)'
@@ -43,8 +43,8 @@
       </a-grid-item>
       <a-grid-item :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6, xxl: 6 }">
         <ChainItem
-          :title="$t('dataAnalysis.card.title.totalShare')"
-          quota="share"
+          title="健康占比"
+          quota="health"
           chart-type="pie"
           :card-style="{
             background: isDark
