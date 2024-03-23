@@ -14,10 +14,11 @@
 
 
 export * from './apis/admin-controller-api';
+export * from './apis/analyse-controller-api';
 export * from './apis/custom-plan-controller-api';
 export * from './apis/disease-record-controller-api';
 export * from './apis/food-mapping-controller-api';
-export * from './apis/food-record-controller-api';
+export * from './apis/food-mapping-controller-food-record-controller-api';
 export * from './apis/nutrition-controller-api';
 export * from './apis/nutrition-record-controller-api';
 export * from './apis/user-controller-api';

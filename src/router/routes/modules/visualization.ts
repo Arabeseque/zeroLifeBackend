@@ -33,6 +33,19 @@ const VISUALIZATION: AppRouteRecordRaw = {
         roles: ['admin'],
       },
     },
+    // name: 'Visualization',
+    {
+      path: 'food-analysis',
+      name: 'FoodAnalysis',
+      component: () => import('@/views/visualization/food-analysis/index.vue'),
+      meta: {
+        locale: '食品数据分析',
+        requiresAuth: true,
+        roles: ['admin'],
+      },
+
+    },
+
   ],
 };
 
