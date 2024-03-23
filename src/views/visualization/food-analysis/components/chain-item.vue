@@ -211,8 +211,10 @@
   const fetchData = async (params: PublicOpinionAnalysis) => {
     try {
       const { data } = await queryPublicOpinionAnalysis(params);
-      renderData.value = data;
-      const { chartData } = data;
+      console.log(data)
+      renderData.value = data.data;
+      const chartData = renderData.value.chartData;
+
       if (props.chartType === 'bar') {
         chartData.forEach((el, idx) => {
           barData.value.push({
@@ -239,7 +241,7 @@
         chartOption.value = pieChartOption.value;
       }
     } catch (err) {
-      // you can report use errorHandler or other
+      console.error(err, 'err')
     } finally {
       setLoading(false);
     }
