@@ -3,8 +3,14 @@
     <a-card :bordered="false" :style="cardStyle">
       <div class="content-wrap">
         <div class="content">
-          <a-statistic :title="title" :value="renderData.count" :value-from="0" animation show-group-separator />
+          <a-statistic v-if="!hotFood" :title="title" :value="renderData.count" :value-from="0" animation show-group-separator />
+          <div v-else class="label">
+            <div flex flex-col gap-6>
+              <div text-xl font-bold>{{ title }}</div>
+            <div text-xl>{{ hotFood }}</div>
+            </div>
 
+          </div>
         </div>
         <div class="chart">
           <Chart v-if="!loading" :option="chartOption" />
@@ -46,7 +52,7 @@ const barChartOptionsFactory = () => {
         trigger: 'axis',
       },
       series: {
-        name: 'total',
+        name: '每日消耗',
         data,
         type: 'bar',
         barWidth: 7,
@@ -85,7 +91,7 @@ const lineChartOptionsFactory = () => {
       },
       series: [
         {
-          name: '2001',
+          name: '每日记录量',
           data: data.value[0],
           type: 'line',
           showSymbol: false,
@@ -96,7 +102,7 @@ const lineChartOptionsFactory = () => {
           },
         },
         {
-          name: '2002',
+          name: '食品总趋势',
           data: data.value[1],
           type: 'line',
           showSymbol: false,
@@ -200,6 +206,10 @@ import { AnalyseControllerApi as importApi } from '@/service/index';
 
 const api = new importApi();
 
+function getHot() {
+  return api.analyseHotFoodsByMonthGet()
+}
+
 function commonFuction(params: PublicOpinionAnalysis) {
   if (params.quota === 'visitors') {
     return queryPublicOpinionAnalysis(params);
@@ -211,7 +221,7 @@ function commonFuction(params: PublicOpinionAnalysis) {
     return api.analyseUnHealthProportionGet();
   }
 }
-
+const hotFood = ref("")
 const fetchData = async (params: PublicOpinionAnalysis) => {
   try {
     const { data } = await commonFuction(params);
@@ -229,8 +239,10 @@ const fetchData = async (params: PublicOpinionAnalysis) => {
       });
       chartOption.value = barChartOption.value;
     } else if (props.chartType === 'line') {
+      const {data} = await getHot()
+      hotFood.value = data.data[0].name
       chartData.forEach((el) => {
-        if (el.name === '2021') {
+        if (el.name === '2024') {
           lineData.value[0].push(el.y);
         } else {
           lineData.value[1].push(el.y);

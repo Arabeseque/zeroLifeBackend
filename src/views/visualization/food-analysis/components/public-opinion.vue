@@ -1,13 +1,13 @@
 <template>
   <a-card
     class="general-card"
-    :title="$t('dataAnalysis.title.publicOpinion')"
+    title="食品数据分析"
     :header-style="{ paddingBottom: '12px' }"
   >
     <a-grid :cols="24" :col-gap="12" :row-gap="12">
       <a-grid-item :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6, xxl: 6 }">
         <ChainItem
-          :title="$t('dataAnalysis.card.title.allVisitors')"
+          title="月度热门食品"
           quota="visitors"
           chart-type="line"
           :card-style="{
@@ -19,7 +19,7 @@
       </a-grid-item>
       <a-grid-item :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6, xxl: 6 }">
         <ChainItem
-          :title="$t('dataAnalysis.card.title.contentPublished')"
+          title="食品记录总量"
           quota="published"
           chart-type="bar"
           :card-style="{
