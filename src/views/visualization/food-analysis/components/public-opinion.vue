@@ -4,7 +4,7 @@
     title="食品数据分析"
     :header-style="{ paddingBottom: '12px' }"
   >
-    <a-grid :cols="24" :col-gap="12" :row-gap="12">
+    <a-grid :cols="24" :col-gap="12" :row-gap="12"> 
       <a-grid-item :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6, xxl: 6 }">
         <ChainItem
           title="月度热门食品"

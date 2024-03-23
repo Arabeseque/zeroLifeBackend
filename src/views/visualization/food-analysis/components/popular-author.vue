@@ -58,7 +58,6 @@
       // const { data } = await queryPopularAuthor();
       const {data} = await api.analyseHotFoodsByYearGet()
       tableData.value.list = data.data;
-      console.log(tableData.value, 'tableData')
 
     } catch (err) {
       // you can report use errorHandler or other

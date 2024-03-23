@@ -2,7 +2,7 @@
   <a-spin :loading="loading" style="width: 100%">
     <a-card class="general-card" :header-style="{ paddingBottom: '16px' }">
       <template #title>
-        {{ $t('dataAnalysis.contentPeriodAnalysis') }}
+        省份平均应用值分析
       </template>
       <Chart style="width: 100%; height: 370px" :option="chartOption" />
     </a-card>
@@ -25,7 +25,7 @@
           <span>${el.seriesName}</span>
         </p>
         <span class="tooltip-value">
-        ${el.value}%
+        ${el.value}
         </span>
       </div>`
       )
@@ -86,7 +86,7 @@
         type: 'value',
         axisLabel: {
           color: '#86909C',
-          formatter: '{value}%',
+          // formatter: '{value}%',
         },
         splitLine: {
           lineStyle: {
@@ -108,7 +108,7 @@
       },
       series: [
         {
-          name: '纯文本',
+          name: '脂肪',
           data: textChartsData.value,
           type: 'line',
           smooth: true,
@@ -125,7 +125,7 @@
           },
         },
         {
-          name: '图文类',
+          name: '碳水',
           data: imgChartsData.value,
           type: 'line',
           smooth: true,
@@ -142,7 +142,7 @@
           },
         },
         {
-          name: '视频类',
+          name: '蛋白',
           data: videoChartsData.value,
           type: 'line',
           smooth: true,
@@ -186,21 +186,44 @@
       ],
     };
   });
+  import { AnalyseControllerApi as importApi } from '@/service/index';
+
+  const api = new importApi();
+
   const fetchData = async () => {
     setLoading(true);
     try {
       const { data: chartData } = await queryContentPeriodAnalysis();
-      xAxis.value = chartData.xAxis;
-      chartData.data.forEach((el) => {
-        if (el.name === '纯文本') {
-          textChartsData.value = el.value;
-        } else if (el.name === '图文类') {
-          imgChartsData.value = el.value;
-        }
-        videoChartsData.value = el.value;
-      });
+      const {data} = await api.analyseProvinceGet()
+      // console.log(data.data.data, 'data') 
+      const renderData = data.data.data;
+      // console.log(chartData.data)
+
+      // xAxis.value = chartData.data.xAxis;
+      xAxis.value = renderData.map((el) => el.geography);
+      renderData.forEach((el) => {
+        // if (el.name === 'zhifang') {
+        //   textChartsData.value = el.zhifang;
+        // } else if (el.name === 'xianwei') {
+        //   imgChartsData.value = el.value;
+        // }
+        // videoChartsData.value = el.value;
+        console.log(el)
+          if (el.zhifang) {
+            // 留下整数
+            textChartsData.value.push(Math.round(el.zhifang))
+          } 
+          if (el.tanshui) {
+            imgChartsData.value.push(Math.round(el.tanshui));
+          }
+          if (el.danguchun) {
+            videoChartsData.value.push(Math.round(el.danguchun));
+          }
+          console.log(videoChartsData.value, 'videoChartsData')
+        });
     } catch (err) {
       // you can report use errorHandler or other
+      console.error(err, 'err');
     } finally {
       setLoading(false);
     }

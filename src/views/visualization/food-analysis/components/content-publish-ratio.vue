@@ -147,7 +147,6 @@
 
       const { data } = await api.analyseMonthlyHealthFoodsGet();
       const chartData = data.data
-      console.log(chartData)
       // xAxis value from rank1 - rank13
       const count = chartData.length;
       // chartData.name
