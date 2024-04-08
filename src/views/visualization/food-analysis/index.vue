@@ -25,6 +25,23 @@
         <div>
           <ContentPeriodAnalysis />
         </div>
+        <div>
+          <a-grid :cols="24" :col-gap="16" :row-gap="16">
+            <a-grid-item
+              :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 16, xxl: 16 }"
+            >
+              <ContentPublishRatioTwo />
+            </a-grid-item>
+            <a-grid-item
+              :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 8, xxl: 8 }"
+            >
+              <PopularAuthorTwo />
+            </a-grid-item>
+          </a-grid>
+        </div>
+        <div>
+          <ContentPeriodAnalysisTwo />
+        </div>
       </a-space>
     </a-space>
   </div>
@@ -33,8 +50,14 @@
 <script lang="ts" setup>
   import PublicOpinion from './components/public-opinion.vue';
   import ContentPeriodAnalysis from './components/content-period-analysis.vue';
+  import ContentPeriodAnalysisTwo from './components/content-period-analysis-two.vue';
+
   import ContentPublishRatio from './components/content-publish-ratio.vue';
+  import ContentPublishRatioTwo from './components/content-publish-ratio-two.vue';
+
   import PopularAuthor from './components/popular-author.vue';
+  import PopularAuthorTwo from './components/popular-author-two.vue';
+
 </script>
 
 <script lang="ts">

@@ -37,13 +37,13 @@
               </template>
               {{ $t('searchTable.operation.create') }}
             </a-button>
-            <a-upload action="/">
+            <!-- <a-upload action="/">
               <template #upload-button>
                 <a-button>
                   {{ $t('searchTable.operation.import') }}
                 </a-button>
               </template>
-            </a-upload>
+            </a-upload> -->
           </a-space>
         </a-col>
         <a-col :span="12" style="display: flex; align-items: center; justify-content: end">
