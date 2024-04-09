@@ -1,33 +1,40 @@
 <template>
   <a-spin :loading="loading" style="width: 100%">
-    <a-card class="general-card" :header-style="{ paddingBottom: '16px' }">
+    <a-card class="general-card" :header-style="{ paddingBottom: '14px' }">
       <template #title>
         省份平均营养值分析
       </template>
-      <Chart style="width: 100%; height: 370px" :option="chartOption" />
+      <Chart style="width: 100%; height: 347px" :option="chartOption" />
     </a-card>
   </a-spin>
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import useLoading from '@/hooks/loading';
-  import { queryContentPeriodAnalysis } from '@/api/visualization';
   import { ToolTipFormatterParams } from '@/types/echarts';
+  import useLoading from '@/hooks/loading';
+  import {
+    queryContentPublish,
+    ContentPublishRecord,
+  } from '@/api/visualization';
   import useChartOption from '@/hooks/chart-option';
 
   const tooltipItemsHtmlString = (items: ToolTipFormatterParams[]) => {
     return items
       .map(
         (el) => `<div class="content-panel">
-        <p>
-          <span style="background-color: ${el.color}" class="tooltip-item-icon"></span>
-          <span>${el.seriesName}</span>
-        </p>
-        <span class="tooltip-value">
-        ${el.value}
-        </span>
-      </div>`
+    <p>
+      <span style="background-color: ${
+        el.color
+      }" class="tooltip-item-icon"></span>
+      <span>
+      ${el.seriesName}
+      </span>
+    </p>
+    <span class="tooltip-value">
+      ${Number(el.value).toLocaleString()}
+    </span>
+  </div>`
       )
       .join('');
   };
@@ -40,10 +47,10 @@
   const { chartOption } = useChartOption((isDark) => {
     return {
       grid: {
-        left: '40',
+        left: '4%',
         right: 0,
         top: '20',
-        bottom: '100',
+        bottom: '60',
       },
       legend: {
         bottom: 0,
@@ -55,7 +62,6 @@
       xAxis: {
         type: 'category',
         data: xAxis.value,
-        boundaryGap: false,
         axisLine: {
           lineStyle: {
             color: isDark ? '#3f3f3f' : '#A9AEB8',
@@ -67,26 +73,19 @@
           lineStyle: {
             color: '#86909C',
           },
-          interval(idx: number) {
-            if (idx === 0) return false;
-            if (idx === xAxis.value.length - 1) return false;
-            return true;
-          },
         },
         axisLabel: {
           color: '#86909C',
-          formatter(value: number, idx: number) {
-            if (idx === 0) return '';
-            if (idx === xAxis.value.length - 1) return '';
-            return `${value}`;
-          },
         },
       },
       yAxis: {
         type: 'value',
         axisLabel: {
           color: '#86909C',
-          // formatter: '{value}%',
+          formatter(value: number, idx: number) {
+            if (idx === 0) return `${value}`;
+            return value;
+          },
         },
         splitLine: {
           lineStyle: {
@@ -108,122 +107,101 @@
       },
       series: [
         {
-          name: '脂肪',
-          data: textChartsData.value,
-          type: 'line',
-          smooth: true,
-          showSymbol: false,
-          color: isDark ? '#3D72F6' : '#246EFF',
-          symbol: 'circle',
-          symbolSize: 10,
-          emphasis: {
-            focus: 'series',
-            itemStyle: {
-              borderWidth: 2,
-              borderColor: '#E0E3FF',
-            },
-          },
-        },
-        {
-          name: '碳水',
-          data: imgChartsData.value,
-          type: 'line',
-          smooth: true,
-          showSymbol: false,
-          color: isDark ? '#A079DC' : '#00B2FF',
-          symbol: 'circle',
-          symbolSize: 10,
-          emphasis: {
-            focus: 'series',
-            itemStyle: {
-              borderWidth: 2,
-              borderColor: '#E2F2FF',
-            },
-          },
-        },
-        {
           name: '蛋白',
-          data: videoChartsData.value,
+          data: textChartsData.value,
+          stack: 'one',
           type: 'line',
-          smooth: true,
-          showSymbol: false,
-          color: isDark ? '#6CAAF5' : '#81E2FF',
-          symbol: 'circle',
-          symbolSize: 10,
-          emphasis: {
-            focus: 'series',
-            itemStyle: {
-              borderWidth: 2,
-              borderColor: '#D9F6FF',
-            },
-          },
-        },
-      ],
-      dataZoom: [
-        {
-          bottom: 40,
-          type: 'slider',
-          left: 40,
-          right: 14,
-          height: 14,
-          borderColor: 'transparent',
-          handleIcon:
-            'image://http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/1ee5a8c6142b2bcf47d2a9f084096447.svg~tplv-49unhts6dw-image.image',
-          handleSize: '20',
-          handleStyle: {
-            shadowColor: 'rgba(0, 0, 0, 0.2)',
-            shadowBlur: 4,
-          },
-          brushSelect: false,
-          backgroundColor: isDark ? '#313132' : '#F2F3F5',
+          barWidth: 16,
+          color: isDark ? '#4A7FF7' : '#246EFF',
         },
         {
-          type: 'inside',
-          start: 0,
-          end: 100,
-          zoomOnMouseWheel: false,
+          name: '脂肪',
+          data: imgChartsData.value,
+          stack: 'one',
+          type: 'line',
+          barWidth: 16,
+          color: isDark ? '#F7A128' : '#FFA940',
+        },
+        {
+          name: '碳水化合物',
+          data: videoChartsData.value,
+          stack: 'one',
+          type: 'line',
+          barWidth: 16,
+          color: isDark ? '#4A7FF7' : '#246EFF',
         },
       ],
     };
   });
+
+  
   import { AnalyseControllerApi as importApi } from '@/service/index';
 
   const api = new importApi();
+  
+  // interface chartData {
+
+  // }
+  interface ChartData {
+    danguchun: number;
+    huluobosu: number;
+    meng: number;
+    tong: number;
+    jia: number;
+    reliang: number;
+    zhifang: number;
+    yansuan: number;
+    va: number;
+    vc: number;
+    gai: number;
+    ve: number;
+    mei: number;
+    lin: number;
+    tie: number;
+    xi: number;
+    na: number;
+    geography: string;
+    danbai: number;
+    tanshui: number;
+    xin: number;
+    xianwei: number;
+  }
 
   const fetchData = async () => {
+
     setLoading(true);
     try {
-      const { data: chartData } = await queryContentPeriodAnalysis();
-      const {data} = await api.analyseProvinceGet()
-      // console.log(data.data.data, 'data') 
-      const renderData = data.data.data;
-      // console.log(chartData.data)
+      // const { data } = await queryContentPublish();
 
-      // xAxis.value = chartData.data.xAxis;
-      xAxis.value = renderData.map((el) => el.geography);
-      renderData.forEach((el) => {
-        // if (el.name === 'zhifang') {
-        //   textChartsData.value = el.zhifang;
-        // } else if (el.name === 'xianwei') {
-        //   imgChartsData.value = el.value;
-        // }
-        // videoChartsData.value = el.value;
-        console.log(el)
-          if (el.zhifang) {
-            // 留下整数
-            textChartsData.value.push(Math.round(el.zhifang))
-          } 
-          if (el.tanshui) {
-            imgChartsData.value.push(Math.round(el.tanshui));
-          }
-          if (el.danguchun) {
-            videoChartsData.value.push(Math.round(el.danguchun));
-          }
-          console.log(videoChartsData.value, 'videoChartsData')
-        });
+      const { data } = await api.analyseProvinceGet();
+      if (!data.data) return;
+      const chartData: ChartData[] = [];
+      chartData.push(...Object.values(data.data.data));
+      const count = chartData.length;
+
+      console.log(chartData, 'chartData')
+
+      // 横坐标为 省份
+      xAxis.value = chartData.map(item => item.geography)
+      
+      chartData.forEach((el: ChartData, index: number) => {
+        if (el.danbai) {
+          textChartsData.value.push(el.danbai);
+        }
+        if (el.danguchun) {
+          imgChartsData.value.push(el.danguchun);
+        }
+        if (el.tanshui) {
+          videoChartsData.value.push(el.tanshui);
+        }
+        console.log(videoChartsData.value, 'videoChartsData')
+        console.log(textChartsData.value, 'textChartsData')
+        console.log(imgChartsData.value, 'imgChartsData')
+
+      });
     } catch (err) {
       // you can report use errorHandler or other
-      console.error(err, 'err');
+      console.error(err, 'err')
     } finally {
       setLoading(false);
     }
@@ -231,9 +209,4 @@
   fetchData();
 </script>
 
-<style scoped lang="less">
-  .chart-box {
-    width: 100%;
-    height: 230px;
-  }
-</style>
+<style scoped lang="less"></style>

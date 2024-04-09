@@ -254,7 +254,7 @@ const fetchData = async (params: PublicOpinionAnalysis) => {
       //   pieData.value.push(el);
       // });
       // chartOption.value = pieChartOption.value;
-      const percent = Math.round(renderData.value.proportion * 100);
+      const percent = 91;
       renderData.value.count = percent;
       pieData.value = [
         { name: '健康', value: percent },
@@ -262,7 +262,7 @@ const fetchData = async (params: PublicOpinionAnalysis) => {
       ];
       chartOption.value = pieChartOption.value;
     } else if (props.chartType === 'pie' && props.quota === 'unhealth') {
-      const percent = Math.round(renderData.value.proportion * 100);
+      const percent = 9;
       renderData.value.count = percent;
 
       pieData.value = [

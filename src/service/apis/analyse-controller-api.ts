@@ -27,6 +27,36 @@ import { Result } from '../models';
 export const AnalyseControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * 获取总结
+         * @summary 获取总结
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        analyseGetsummaryGet: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/analyse/getsummary`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 计算健康用户的占比（判断没有疾病并且bmi正常）
          * @summary 计算健康用户的占比（判断没有疾病并且bmi正常）
          * @param {*} [options] Override http request option.
@@ -276,6 +306,19 @@ export const AnalyseControllerApiAxiosParamCreator = function (configuration?: C
 export const AnalyseControllerApiFp = function(configuration?: Configuration) {
     return {
         /**
+         * 获取总结
+         * @summary 获取总结
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async analyseGetsummaryGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Result>> {
+            const localVarAxiosArgs = await AnalyseControllerApiAxiosParamCreator(configuration).analyseGetsummaryGet(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
          * 计算健康用户的占比（判断没有疾病并且bmi正常）
          * @summary 计算健康用户的占比（判断没有疾病并且bmi正常）
          * @param {*} [options] Override http request option.
@@ -389,6 +432,15 @@ export const AnalyseControllerApiFp = function(configuration?: Configuration) {
 export const AnalyseControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
+         * 获取总结
+         * @summary 获取总结
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        analyseGetsummaryGet(options?: any): AxiosPromise<Result> {
+            return AnalyseControllerApiFp(configuration).analyseGetsummaryGet(options).then((request) => request(axios, basePath));
+        },
+        /**
          * 计算健康用户的占比（判断没有疾病并且bmi正常）
          * @summary 计算健康用户的占比（判断没有疾病并且bmi正常）
          * @param {*} [options] Override http request option.
@@ -470,6 +522,17 @@ export const AnalyseControllerApiFactory = function (configuration?: Configurati
  * @extends {BaseAPI}
  */
 export class AnalyseControllerApi extends BaseAPI {
+    /**
+     * 获取总结
+     * @summary 获取总结
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AnalyseControllerApi
+     */
+    public analyseGetsummaryGet(options?: any) {
+        return AnalyseControllerApiFp(this.configuration).analyseGetsummaryGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 计算健康用户的占比（判断没有疾病并且bmi正常）
      * @summary 计算健康用户的占比（判断没有疾病并且bmi正常）

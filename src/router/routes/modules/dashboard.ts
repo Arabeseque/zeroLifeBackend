@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       name: 'Workplace',
       component: () => import('@/views/visualization/food-analysis/index.vue'),
       meta: {
-        locale: '食品数据分析',
+        locale: '大屏数据展示',
         requiresAuth: true,
         roles: ['admin'],
       },

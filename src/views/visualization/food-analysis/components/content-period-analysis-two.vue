@@ -4,11 +4,7 @@
       <template #title>
         省份平均营养值分析
       </template>
-      <!-- <Chart style="width: 100%; height: 370px" :option="chartOption" /> -->
-      ByteDance's core product, Toutiao ("Headlines"), is a content platform in
-      China and around the world. Toutiao started out as a news recommendation
-      engine and gradually evolved into a platform delivering content in various
-      formats.
+      {{ wordData }}
     </a-card>
   </a-spin>
 </template>
@@ -194,6 +190,7 @@
 
   const api = new importApi();
 
+  const wordData = ref();
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -225,6 +222,12 @@
           }
           console.log(videoChartsData.value, 'videoChartsData')
         });
+
+        // another
+        const {data: resData} = await api.analyseGetsummaryGet()
+        wordData.value = resData.data
+        console.log(wordData.data, 'wordData')
+
     } catch (err) {
       // you can report use errorHandler or other
       console.error(err, 'err');
