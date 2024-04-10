@@ -54,39 +54,9 @@ const LIST: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
-    // 食物记录表
-    {
-      path: 'food-record-table', // The midline path complies with SEO specifications
-      name: 'foodRecordTable',
-      component: () => import('@/views/list/food-record-table/index.vue'),
-      meta: {
-        locale: '食物记录表',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
-    // 图片识别映射
-    {
-      path: 'image-recognize-table', // The midline path complies with SEO specifications
-      name: 'imageRecognizeTable',
-      component: () => import('@/views/list/image-recognize-table/index.vue'),
-      meta: {
-        locale: '图片识别映射',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
-    // 营养记录表
-    {
-      path: 'nutrition-record-table', // The midline path complies with SEO specifications
-      name: 'nutritionRecordTable',
-      component: () => import('@/views/list/disease-record-table/index.vue'),
-      meta: {
-        locale: '营养记录表',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
+
+
+
     // {
     //   path: 'card',
     //   name: 'Card',

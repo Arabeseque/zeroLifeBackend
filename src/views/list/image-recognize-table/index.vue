@@ -349,6 +349,9 @@ const densityList = computed(() => [
     value: 'large',
   },
 ]);
+
+interface 
+
 const columns = computed<TableColumnData[]>(() => [
   {
     title: 'ID',

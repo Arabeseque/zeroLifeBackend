@@ -490,10 +490,11 @@ const fetchData = async (
   params: PolicyParams = { current: 1, pageSize: 20 }
 ) => {
   setLoading(true);
+  console.log(params, 'params')
   try {
     // TODO: getData
     const api = new NutritionControllerApi();
-    const { data } = await api.nutritionGet(1, 10)
+    const { data } = await api.nutritionGet(params.current, params.pageSize)
 
     console.log(data, 'getData')
     // const { data } = await queryPolicyList(params);
@@ -518,6 +519,7 @@ const search = () => {
   } as unknown as PolicyParams);
 };
 const onPageChange = (current: number) => {
+  console.log(current, 'current')
   fetchData({ ...basePagination, current });
 };
 

@@ -112,6 +112,8 @@
           stack: 'one',
           type: 'line',
           barWidth: 16,
+          smooth: true,
+
           color: isDark ? '#4A7FF7' : '#246EFF',
         },
         {
@@ -120,6 +122,8 @@
           stack: 'one',
           type: 'line',
           barWidth: 16,
+          smooth: true,
+
           color: isDark ? '#F7A128' : '#FFA940',
         },
         {
@@ -127,6 +131,8 @@
           data: videoChartsData.value,
           stack: 'one',
           type: 'line',
+          smooth: true,
+
           barWidth: 16,
           color: isDark ? '#4A7FF7' : '#246EFF',
         },
